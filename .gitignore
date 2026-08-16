@@ -1,0 +1,47 @@
+# Node / Frontend Dependencies & Build Output
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.nx/
+.npm/
+*.log
+
+# Python / Backend Virtual Envs, Cache & Binaries
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+env/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Databases & User Uploads
+*.db
+*.sqlite
+*.sqlite3
+backend/nyaysahayak.db
+backend/nyaytarka.db
+backend/uploads/
+uploads/
+
+# Environment Variables & Credentials
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE & OS Specific Files
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Project PDFs
+NyaySahayak_Master_Roadmap_v3_36_Week (1).pdf
