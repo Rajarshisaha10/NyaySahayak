@@ -32,6 +32,14 @@ app.include_router(documents.router)
 app.include_router(verification.router)
 app.include_router(case_graph.router)
 
+@app.get("/")
+def root():
+    return {
+        "message": "NyaySahayak API is running",
+        "health": "/health",
+        "docs": "/docs"
+    }
+
 @app.get("/health")
 def health_check():
     return {
