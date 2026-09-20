@@ -28,8 +28,15 @@ export const CaseUpload: React.FC<CaseUploadProps> = ({ caseId, onUploadSuccess 
       });
 
       if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.detail || 'Upload failed');
+        let errorMsg = 'Upload failed';
+        try {
+          const data = await response.json();
+          errorMsg = data.detail || errorMsg;
+        } catch {
+          const text = await response.text();
+          errorMsg = text || errorMsg;
+        }
+        throw new Error(errorMsg);
       }
 
       const docData = await response.json();
@@ -44,7 +51,7 @@ export const CaseUpload: React.FC<CaseUploadProps> = ({ caseId, onUploadSuccess 
   return (
     <div className="card">
       <h3 className="card-title">
-        <Upload size={18} /> Upload Legal Case Material
+        <Upload size={18} style={{ color: '#ffffff' }} /> Upload Legal Case Material
       </h3>
       <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1.25rem' }}>
         Upload PDF, DOCX, or TXT petition copies, evidence documents, or statutory filings. Page numbers and provenance metadata will be automatically extracted.
@@ -58,7 +65,7 @@ export const CaseUpload: React.FC<CaseUploadProps> = ({ caseId, onUploadSuccess 
           disabled={uploading}
           style={{ display: 'none' }}
         />
-        <FileText size={32} style={{ color: 'var(--accent-teal)', marginBottom: '0.5rem' }} />
+        <FileText size={32} style={{ color: '#ffffff', marginBottom: '0.5rem' }} />
         <div style={{ fontWeight: 600, fontSize: '0.92rem' }}>
           {uploading ? 'Processing & Extracting Page Spans...' : 'Click or Drag & Drop File'}
         </div>

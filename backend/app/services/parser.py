@@ -1,14 +1,19 @@
 """
-Page-Preserving Document Parsing & Provenance Extraction Engine for NyayTarka.
+Page-Preserving Document Parsing & Provenance Extraction Engine for NyaySahayak.
 
-Supports PDF (via PyMuPDF/fitz), DOCX (via python-docx), and TXT files.
-Preserves exact page numbers, layout boundaries, and generates Provenance Objects.
+Phase 1 Multilingual & OCR Enhancements:
+- Integrates OCRProcessor for scanned court filings.
+- Integrates MultilingualLanguageEngine for Devanagari/Hindi normalization.
+- Preserves page numbers and enriches Provenance Objects with script_type and ocr_applied metadata.
 """
 
 import os
-from typing import List, Dict, Any, Tuple
+from typing import List, Dict, Any
 import fitz  # PyMuPDF
 import docx
+
+from app.services.ocr_service import OCRProcessor
+from app.services.language_service import MultilingualLanguageEngine
 
 class DocumentParsingResult:
     def __init__(self, page_count: int, chunks: List[Dict[str, Any]], detected_languages: List[str]):
@@ -41,23 +46,28 @@ class PagePreservingParser:
         for page_idx in range(page_count):
             page = doc[page_idx]
             page_number = page_idx + 1
-            text = page.get_text("text").strip()
 
-            if not text:
-                # Page might be scanned - flag for OCR in Phase 1
-                text = f"[SCANNED PAGE {page_number} - REQUIRES OCR]"
-                confidence = 0.5
+            # Phase 1: Process Page via OCR Engine
+            ocr_res = OCRProcessor.process_page(page, page_number)
+            raw_text = ocr_res.text
+
+            # Phase 1: Multilingual Script Analysis & Devanagari Normalization
+            script_info = MultilingualLanguageEngine.identify_script(raw_text)
+            lang_code = script_info["language_code"]
+            script_type = script_info["script_type"]
+            detected_languages.add(lang_code)
+
+            if "hi" in lang_code or "devanagari" in script_type:
+                normalized_text = MultilingualLanguageEngine.normalize_devanagari_text(raw_text)
+            elif "ta" in lang_code or "tamil" in script_type:
+                normalized_text = MultilingualLanguageEngine.normalize_tamil_text(raw_text)
             else:
-                confidence = 0.98
-
-            # Baseline language detection heuristic
-            lang = PagePreservingParser._detect_language(text)
-            detected_languages.add(lang)
+                normalized_text = raw_text.strip()
 
             # Split page text into clean structural paragraphs while keeping page reference
-            paragraphs = [p.strip() for p in text.split("\n\n") if p.strip()]
+            paragraphs = [p.strip() for p in normalized_text.split("\n\n") if p.strip()]
             if not paragraphs:
-                paragraphs = [text]
+                paragraphs = [normalized_text]
 
             for chunk_idx, paragraph in enumerate(paragraphs):
                 provenance = {
@@ -66,16 +76,21 @@ class PagePreservingParser:
                     "page": page_number,
                     "chunk_index": chunk_idx,
                     "text_span": paragraph[:200],  # Prefix snippet for quick verification
-                    "language": lang,
-                    "extraction_confidence": confidence
+                    "language": lang_code,
+                    "script_type": script_type,
+                    "ocr_applied": ocr_res.ocr_applied,
+                    "is_scanned": ocr_res.is_scanned,
+                    "extraction_confidence": ocr_res.confidence
                 }
 
                 chunks.append({
                     "page_number": page_number,
                     "chunk_index": chunk_idx,
                     "text_content": paragraph,
-                    "language": lang,
-                    "extraction_confidence": confidence,
+                    "language": lang_code,
+                    "script_type": script_type,
+                    "ocr_applied": ocr_res.ocr_applied,
+                    "extraction_confidence": ocr_res.confidence,
                     "provenance": provenance
                 })
 
@@ -90,23 +105,34 @@ class PagePreservingParser:
     def _parse_docx(file_path: str, document_id: str) -> DocumentParsingResult:
         doc = docx.Document(file_path)
         chunks: List[Dict[str, Any]] = []
-
         current_page = 1
         chunk_idx = 0
+        detected_languages = set()
 
         for para in doc.paragraphs:
             text = para.text.strip()
             if not text:
                 continue
 
-            lang = PagePreservingParser._detect_language(text)
+            script_info = MultilingualLanguageEngine.identify_script(text)
+            lang_code = script_info["language_code"]
+            script_type = script_info["script_type"]
+            detected_languages.add(lang_code)
+
+            if "hi" in lang_code or "devanagari" in script_type:
+                text = MultilingualLanguageEngine.normalize_devanagari_text(text)
+            elif "ta" in lang_code or "tamil" in script_type:
+                text = MultilingualLanguageEngine.normalize_tamil_text(text)
+
             provenance = {
                 "source_type": "case_document",
                 "document_id": document_id,
                 "page": current_page,
                 "chunk_index": chunk_idx,
                 "text_span": text[:200],
-                "language": lang,
+                "language": lang_code,
+                "script_type": script_type,
+                "ocr_applied": False,
                 "extraction_confidence": 0.99
             }
 
@@ -114,7 +140,9 @@ class PagePreservingParser:
                 "page_number": current_page,
                 "chunk_index": chunk_idx,
                 "text_content": text,
-                "language": lang,
+                "language": lang_code,
+                "script_type": script_type,
+                "ocr_applied": False,
                 "extraction_confidence": 0.99,
                 "provenance": provenance
             })
@@ -123,7 +151,7 @@ class PagePreservingParser:
         return DocumentParsingResult(
             page_count=current_page,
             chunks=chunks,
-            detected_languages=["en"]
+            detected_languages=list(detected_languages) or ["en"]
         )
 
     @staticmethod
@@ -134,6 +162,7 @@ class PagePreservingParser:
         chunks: List[Dict[str, Any]] = []
         page_number = 1
         lines_per_page = 50
+        detected_languages = set()
 
         for idx, line in enumerate(lines):
             text = line.strip()
@@ -141,13 +170,25 @@ class PagePreservingParser:
                 continue
 
             page_number = (idx // lines_per_page) + 1
+            script_info = MultilingualLanguageEngine.identify_script(text)
+            lang_code = script_info["language_code"]
+            script_type = script_info["script_type"]
+            detected_languages.add(lang_code)
+
+            if "hi" in lang_code or "devanagari" in script_type:
+                text = MultilingualLanguageEngine.normalize_devanagari_text(text)
+            elif "ta" in lang_code or "tamil" in script_type:
+                text = MultilingualLanguageEngine.normalize_tamil_text(text)
+
             provenance = {
                 "source_type": "case_document",
                 "document_id": document_id,
                 "page": page_number,
                 "chunk_index": idx,
                 "text_span": text[:200],
-                "language": "en",
+                "language": lang_code,
+                "script_type": script_type,
+                "ocr_applied": False,
                 "extraction_confidence": 1.0
             }
 
@@ -155,7 +196,9 @@ class PagePreservingParser:
                 "page_number": page_number,
                 "chunk_index": idx,
                 "text_content": text,
-                "language": "en",
+                "language": lang_code,
+                "script_type": script_type,
+                "ocr_applied": False,
                 "extraction_confidence": 1.0,
                 "provenance": provenance
             })
@@ -163,13 +206,10 @@ class PagePreservingParser:
         return DocumentParsingResult(
             page_count=page_number,
             chunks=chunks,
-            detected_languages=["en"]
+            detected_languages=list(detected_languages) or ["en"]
         )
 
     @staticmethod
     def _detect_language(text: str) -> str:
-        """Basic Unicode range detection for Devanagari (Hindi) vs Latin (English)."""
-        devanagari_count = sum(1 for char in text if '\u0900' <= char <= '\u097F')
-        if devanagari_count > len(text) * 0.15:
-            return "hi"  # Hindi / Devanagari script
-        return "en"     # Default English
+        return MultilingualLanguageEngine.identify_script(text)["language_code"]
+

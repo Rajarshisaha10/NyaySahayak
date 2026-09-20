@@ -1,5 +1,7 @@
 """
-Document Upload and Page-Aware Text Retrieval APIs for NyayTarka.
+Document Upload and Page-Aware Text Retrieval APIs for NyaySahayak.
+
+Phase 1 Multilingual & OCR API updates.
 """
 
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
@@ -10,7 +12,7 @@ import os
 import shutil
 import uuid
 from app.db.database import get_db
-from app.db.models import Document, DocumentChunk, Case
+from app.db.models import Document, DocumentChunk, Case, User
 from app.services.parser import PagePreservingParser
 
 router = APIRouter(prefix="/api/documents", tags=["documents"])
@@ -24,6 +26,8 @@ class DocumentChunkResponse(BaseModel):
     chunk_index: int
     text_content: str
     language: str
+    script_type: str = "latin_english"
+    ocr_applied: bool = False
     extraction_confidence: float
     provenance: Optional[Dict[str, Any]] = None
 
@@ -46,7 +50,23 @@ async def upload_document(
 ):
     case = db.query(Case).filter(Case.id == case_id).first()
     if not case:
-        raise HTTPException(status_code=404, detail="Case workspace not found.")
+        # Auto-provision case workspace if missing for zero-friction uploads
+        user = db.query(User).filter(User.id == "counsel_demo").first()
+        if not user:
+            user = User(id="counsel_demo", email="counsel@nyaysahayak.local", hashed_password="guest", full_name="Counsel")
+            db.add(user)
+            db.commit()
+            db.refresh(user)
+        
+        case = Case(
+            id=case_id,
+            user_id=user.id,
+            title="State of Kerala v. Constitutional Amendments (Demo Workspace)",
+            court_type="Supreme Court of India"
+        )
+        db.add(case)
+        db.commit()
+        db.refresh(case)
 
     doc_id = str(uuid.uuid4())
     case_upload_dir = os.path.join(UPLOAD_DIR, f"case_{case_id}")
@@ -59,12 +79,14 @@ async def upload_document(
     file_size = os.path.getsize(saved_path)
     file_ext = os.path.splitext(file.filename)[1].lower().replace(".", "")
 
-    # Parse file preserving pages & provenance
+    # Parse file preserving pages, provenance, OCR & multilingual script
     try:
         parsed = PagePreservingParser.parse_file(saved_path, doc_id)
     except Exception as e:
         os.remove(saved_path)
         raise HTTPException(status_code=400, detail=f"Failed to parse document: {str(e)}")
+
+    any_ocr_applied = any(chunk.get("ocr_applied", False) for chunk in parsed.chunks)
 
     new_doc = Document(
         id=doc_id,
@@ -74,7 +96,7 @@ async def upload_document(
         file_type=file_ext,
         file_size=file_size,
         page_count=parsed.page_count,
-        ocr_applied=False,
+        ocr_applied=any_ocr_applied,
         detected_languages=",".join(parsed.detected_languages)
     )
     db.add(new_doc)
@@ -88,6 +110,8 @@ async def upload_document(
             chunk_index=chunk["chunk_index"],
             text_content=chunk["text_content"],
             language=chunk["language"],
+            script_type=chunk.get("script_type", "latin_english"),
+            ocr_applied=chunk.get("ocr_applied", False),
             extraction_confidence=chunk["extraction_confidence"],
             provenance_json=chunk["provenance"]
         )
@@ -101,6 +125,8 @@ async def upload_document(
             chunk_index=new_chunk.chunk_index,
             text_content=new_chunk.text_content,
             language=new_chunk.language,
+            script_type=new_chunk.script_type,
+            ocr_applied=new_chunk.ocr_applied,
             extraction_confidence=new_chunk.extraction_confidence,
             provenance=new_chunk.provenance_json
         ))
@@ -144,6 +170,8 @@ def get_document_pages(doc_id: str, db: Session = Depends(get_db)):
             chunk_index=c.chunk_index,
             text_content=c.text_content,
             language=c.language,
+            script_type=c.script_type or "latin_english",
+            ocr_applied=c.ocr_applied or False,
             extraction_confidence=c.extraction_confidence,
             provenance=c.provenance_json
         ) for c in chunks

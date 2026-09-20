@@ -1,11 +1,11 @@
 """
-Main FastAPI Application Entrypoint for NyayTarka (NyaySahayak).
+Main FastAPI Application Entrypoint for NyaySahayak.
 """
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.db.database import engine, Base
-from app.api import auth, cases, documents, verification
+from app.api import auth, cases, documents, verification, case_graph
 
 # Initialize Database tables
 Base.metadata.create_all(bind=engine)
@@ -13,13 +13,13 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI(
     title="NyaySahayak API",
     description="Verified Multi-Agent AI System for Courtroom Preparation",
-    version="0.1.0"
+    version="0.2.0"
 )
 
 # CORS Middleware setup
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Adjust in production
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -30,14 +30,15 @@ app.include_router(auth.router)
 app.include_router(cases.router)
 app.include_router(documents.router)
 app.include_router(verification.router)
+app.include_router(case_graph.router)
 
 @app.get("/health")
 def health_check():
     return {
         "status": "online",
         "system": "NyaySahayak",
-        "phase": "Phase 0 - Foundation & Legal Corpus Spec",
-        "version": "0.1.0"
+        "phase": "Phase 2 - Case Intelligence & Evaluation Dataset",
+        "version": "0.2.0"
     }
 
 if __name__ == "__main__":

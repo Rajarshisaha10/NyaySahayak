@@ -66,6 +66,8 @@ class DocumentChunk(Base):
     chunk_index = Column(Integer, nullable=False)
     text_content = Column(Text, nullable=False)
     language = Column(String, default="en")
+    script_type = Column(String, default="latin_english")
+    ocr_applied = Column(Boolean, default=False)
     extraction_confidence = Column(Float, default=1.0)
     provenance_json = Column(JSON, nullable=True)  # Stores exact Provenance Object metadata
 
@@ -84,3 +86,14 @@ class CitationVerification(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
     case = relationship("Case", back_populates="verifications")
+
+class CaseGraphRecord(Base):
+    __tablename__ = "case_graph_records"
+
+    id = Column(String, primary_key=True, default=generate_uuid)
+    case_id = Column(String, ForeignKey("cases.id"), nullable=False)
+    version = Column(String, default="1.0")
+    graph_json = Column(JSON, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    case = relationship("Case", back_populates="case_graphs")

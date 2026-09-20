@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NyaySahayak — Legal Intelligence Designed To Protect</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- OnlineWebFonts CDN for BubbledotICG-FinePos -->
+  <link href="https://db.onlinewebfonts.com/c/8cb707a9b8a73f8a7403336b861c3074?family=BubbledotICG-FinePos" rel="stylesheet" />
+
+  <!-- Font Awesome 6.5.2 -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Fixed Full-Viewport Cover Video Background -->
+  <div class="bg">
+    <video class="bg-video" autoplay muted loop playsinline>
+      <source
+        src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260809_012548_ef22562c-c0ae-4816-ad9d-f8922af4e6a7.mp4"
+        type="video/mp4"
+      />
+    </video>
+  </div>
+
+  <!-- Main Content Wrapper -->
+  <div class="page">
+    
+    <!-- 1) FIXED HEADER (NAVBAR) -->
+    <header class="header">
+      <!-- Circular White Logo Button -->
+      <a href="#home" class="logo-btn" aria-label="NyaySahayak Home">
+        <img src="assets/logo.webp" alt="" width="52" height="52" />
+      </a>
+
+      <!-- Desktop Nav Pill (White) -->
+      <nav class="nav-pill">
+        <a href="#home" class="nav-link active">Home</a>
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#cases" class="nav-link">Case Studies</a>
+        <a href="#contact" class="nav-link">Contact</a>
+      </nav>
+
+      <!-- Desktop Launch App Pill (Dark) -->
+      <a href="http://localhost:3000" target="_blank" class="sign-in-btn">Launch App</a>
+
+      <!-- Mobile Circular Burger Button -->
+      <button id="burger-btn" class="burger-btn" aria-expanded="false" aria-label="Toggle Navigation Menu">
+        <span class="burger-bar"></span>
+        <span class="burger-bar"></span>
+        <span class="burger-bar"></span>
+      </button>
+    </header>
+
+    <!-- 2) HERO SECTION (HERO VIEWPORT) -->
+    <section id="home" class="hero">
+      
+      <!-- Trust Row ("Trusted by 50,000+ Citizens & Advocates") -->
+      <div class="trust-row anim" style="--d: 0.05s;">
+        <div class="trust-avatar">
+          <div class="trust-avatar-inner">
+            <i class="fa-solid fa-scale-balanced"></i>
+          </div>
+        </div>
+        <div class="trust-avatar">
+          <div class="trust-avatar-inner">
+            <i class="fa-solid fa-gavel"></i>
+          </div>
+        </div>
+        <div class="trust-avatar">
+          <div class="trust-avatar-inner">
+            <i class="fa-solid fa-building-columns"></i>
+          </div>
+        </div>
+        <div class="trust-pill">
+          <span class="trust-pill-text">Trusted by 50,000+ Citizens & Advocates</span>
+        </div>
+      </div>
+
+      <!-- Headline (Solid White Dot-Matrix Display Font) -->
+      <h1 class="headline anim">
+        <span class="line-1">Legal Intelligence</span>
+        <span class="line-2">Designed To Protect</span>
+      </h1>
+
+      <!-- Subheadline Copy -->
+      <p class="subhead anim" style="--d: 0.28s;">
+        Understand your rights, verify citations with 6-check accuracy, and draft court-ready documents using a modular legal AI platform.
+      </p>
+
+      <!-- Primary CTA Button -->
+      <a href="http://localhost:3000" target="_blank" class="cta-btn">Ask NyaySahayak Free</a>
+
+    </section>
+
+    <!-- 3) SECTION 1: WHAT IT IS & HOW IT HELPS (#features) -->
+    <section id="features" class="landing-section">
+      <span class="section-tag">Platform Capabilities</span>
+      <h2 class="section-title">What NyaySahayak Is & How It Helps You</h2>
+      <p class="section-desc">
+        NyaySahayak bridges the gap between complex Indian law and everyday citizens. Our verified multi-agent AI processes court filings, verifies citations against official legal repositories, and assists courtroom preparation.
+      </p>
+
+      <div class="glass-grid">
+        <div class="glass-box">
+          <div class="box-icon"><i class="fa-solid fa-shield-halved"></i></div>
+          <h3 class="box-title">6-Check Citation Verification</h3>
+          <p class="box-text">Evaluates citations across Existence, Identity, Source, Quotation, Proposition, and Trace checks to eliminate fabricated case laws.</p>
+        </div>
+
+        <div class="glass-box">
+          <div class="box-icon"><i class="fa-solid fa-language"></i></div>
+          <h3 class="box-title">Multilingual OCR & Script Engine</h3>
+          <p class="box-text">Native script identification and Unicode NFC normalization for Hindi (हिन्दी) and Tamil (தமிழ்) with exact page-level provenance.</p>
+        </div>
+
+        <div class="glass-box">
+          <div class="box-icon"><i class="fa-solid fa-diagram-project"></i></div>
+          <h3 class="box-title">Master Case Graph Context</h3>
+          <p class="box-text">Extracts structured facts, parties, chronological timeline events, and claim-to-evidence mappings into a versioned Case Graph.</p>
+        </div>
+
+        <div class="glass-box">
+          <div class="box-icon"><i class="fa-solid fa-file-contract"></i></div>
+          <h3 class="box-title">Court-Ready Document Drafting</h3>
+          <p class="box-text">Drafts formal RTIs, Model Tenancy legal notices, consumer dispute complaints, and writ petitions grounded in current bare acts.</p>
+        </div>
+      </div>
+
+      <div class="callout-banner">
+        <div>
+          <div class="callout-title">Ready to Test Your Case Record?</div>
+          <div class="callout-text">Upload any petition PDF/DOCX and run the 6-Check Citation Engine in real time.</div>
+        </div>
+        <a href="http://localhost:3000" target="_blank" class="launch-app-btn">Try NyaySahayak App &rarr;</a>
+      </div>
+    </section>
+
+    <!-- 4) SECTION 2: CASE STUDIES & REAL-WORLD IMPACT (#cases) -->
+    <section id="cases" class="landing-section">
+      <span class="section-tag">Precedent Traceability</span>
+      <h2 class="section-title">Case Studies & Real-World Impact</h2>
+      <p class="section-desc">
+        See how NyaySahayak handles complex constitutional benchmarks and everyday legal disputes with 100% citation traceability.
+      </p>
+
+      <div class="glass-grid">
+        <div class="glass-box">
+          <div class="box-icon"><i class="fa-solid fa-landmark"></i></div>
+          <h3 class="box-title">Kesavananda Bharati v. State of Kerala</h3>
+          <p class="box-text">Processed 24th Amendment challenges, verified 13 SCC citations across 700 pages, and compiled a 1973 Basic Structure chronological timeline.</p>
+        </div>
+
+        <div class="glass-box">
+          <div class="box-icon"><i class="fa-solid fa-house-chimney"></i></div>
+          <h3 class="box-title">Tenancy Deposit Refund Notice</h3>
+          <p class="box-text">Generated a 15-day formal Legal Notice under Model Tenancy Act Section 13 for a Delhi tenant, resulting in a full ₹65,000 refund without court litigation.</p>
+        </div>
+
+        <div class="glass-box">
+          <div class="box-icon"><i class="fa-solid fa-file-invoice"></i></div>
+          <h3 class="box-title">Municipal Road Construction RTI</h3>
+          <p class="box-text">Drafted a plain-language Marathi RTI application requesting contractor billing logs and completion timelines from municipal authorities.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5) SECTION 3: CONTACT & ADVOCATE NETWORK (#contact) -->
+    <section id="contact" class="landing-section">
+      <span class="section-tag">Get In Touch</span>
+      <h2 class="section-title">Contact & Bar Advocate Network</h2>
+      <p class="section-desc">
+        Need assistance connecting with Bar Council accredited legal advocates? We are here to assist everyday citizens and advocates.
+      </p>
+
+      <div class="glass-box" style="margin-bottom: 30px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px;">
+          <div>
+            <div style="color: #ffffff; font-weight: 600; margin-bottom: 6px;"><i class="fa-solid fa-envelope"></i> Email Support</div>
+            <div style="color: #9aa3ac; font-size: 14px;">support@nyaysahayak.in</div>
+          </div>
+
+          <div>
+            <div style="color: #ffffff; font-weight: 600; margin-bottom: 6px;"><i class="fa-solid fa-phone"></i> Toll-Free Legal Helpline</div>
+            <div style="color: #9aa3ac; font-size: 14px;">1800-NYAY-HELP (Mon-Sat, 9AM - 7PM)</div>
+          </div>
+
+          <div>
+            <div style="color: #ffffff; font-weight: 600; margin-bottom: 6px;"><i class="fa-solid fa-building-columns"></i> Court Networks</div>
+            <div style="color: #9aa3ac; font-size: 14px;">Supreme Court of India, High Courts (Delhi, Bombay, Madras)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout-banner">
+        <div>
+          <div class="callout-title">Launch the NyaySahayak Legal App</div>
+          <div class="callout-text">Access document parsing, Case Graph dashboards, and verification tools now.</div>
+        </div>
+        <a href="http://localhost:3000" target="_blank" class="launch-app-btn">Launch Application &rarr;</a>
+      </div>
+    </section>
+
+    <!-- 6) STATS FOOTER SECTION -->
+    <footer id="stats" class="stats-footer">
+      <div class="stats-grid">
+        <div class="stat-item anim" style="--d: 0.5s;">
+          <div class="stat-icon">&lt;</div>
+          <div class="stat-value-box" id="stat-val-1">0ms</div>
+          <div class="stat-label">Citation Verification</div>
+        </div>
+
+        <div class="stat-item anim" style="--d: 0.58s;">
+          <div class="stat-icon">%</div>
+          <div class="stat-value-box" id="stat-val-2">0%</div>
+          <div class="stat-label">Extraction Accuracy</div>
+        </div>
+
+        <div class="stat-item anim" style="--d: 0.66s;">
+          <div class="stat-icon">*</div>
+          <div class="stat-value-box" id="stat-val-3">0+</div>
+          <div class="stat-label">Native Languages</div>
+        </div>
+
+        <div class="stat-item anim" style="--d: 0.74s;">
+          <div class="stat-icon">#</div>
+          <div class="stat-value-box" id="stat-val-4">0K+</div>
+          <div class="stat-label">Verified Cases</div>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Mobile Sheet Menu & Overlay (<= 720px) -->
+  <div id="mobile-overlay" class="mobile-overlay">
+    <div class="mobile-menu-sheet">
+      <a href="#home" class="mobile-nav-link active">Home</a>
+      <a href="#features" class="mobile-nav-link">Features</a>
+      <a href="#cases" class="mobile-nav-link">Case Studies</a>
+      <a href="#contact" class="mobile-nav-link">Contact</a>
+      <a href="http://localhost:3000" target="_blank" class="mobile-sign-in-btn">Launch App</a>
+    </div>
+  </div>
+
+  <!-- Main JavaScript File -->
+  <script src="main.js"></script>
+</body>
+</html>

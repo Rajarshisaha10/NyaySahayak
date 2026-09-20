@@ -26,7 +26,7 @@ export const CorpusWhitelistView: React.FC = () => {
   return (
     <div className="card" style={{ marginTop: '1.5rem' }}>
       <h3 className="card-title">
-        <Database size={18} style={{ color: 'var(--accent-teal)' }} /> Whitelisted Legal Authority Sources
+        <Database size={18} style={{ color: '#ffffff' }} /> Whitelisted Legal Authority Sources
       </h3>
       <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1rem' }}>
         Architecture-Driven Trust: NyaySahayak restricts legal verification exclusively to official, whitelisted authority repositories.
@@ -54,7 +54,7 @@ export const CorpusWhitelistView: React.FC = () => {
                 href={source.official_url}
                 target="_blank"
                 rel="noreferrer"
-                style={{ color: 'var(--accent-teal)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.2rem', marginTop: '0.2rem' }}
+                style={{ color: '#ffffff', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.2rem', marginTop: '0.2rem' }}
               >
                 Official Repository <ExternalLink size={12} />
               </a>
